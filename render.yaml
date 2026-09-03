@@ -1,0 +1,21 @@
+# CodeNest — Render.com one-click blueprint (all-in-one service)
+# Deploy: Render Dashboard → New → Blueprint → point at your GitHub repo.
+services:
+  - type: web
+    name: codenest
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: GEMINI_MODEL
+        value: gemini-3.6-flash
+      - key: MONGODB_URI
+        sync: false   # paste your Atlas URI in the Render dashboard
+      - key: GEMINI_API_KEY
+        sync: false   # paste your Google AI Studio key in the Render dashboard
+      - key: JWT_SECRET
+        generateValue: true
