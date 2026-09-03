@@ -1,12 +1,14 @@
 // Pyodide web worker — loads the Python runtime from CDN and executes code
 // fully inside the browser (secure, serverless execution).
-import { loadPyodide } from 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.mjs';
+// Dynamic + @vite-ignore so the bundler never rewrites the CDN import.
+const PYODIDE_URL = 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.mjs';
+const PYODIDE_INDEX = 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/';
 
 let pyodidePromise = null;
 
 function getPyodide() {
   if (!pyodidePromise) {
-    pyodidePromise = loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/' });
+    pyodidePromise = import(/* @vite-ignore */ PYODIDE_URL).then((mod) => mod.loadPyodide({ indexURL: PYODIDE_INDEX }));
   }
   return pyodidePromise;
 }
