@@ -65,29 +65,27 @@ node scripts/test-sync.mjs   # 17-check multi-user real-time test suite (server 
 
 ---
 
-## 🚀 Deploy to Render (free, ~15 minutes)
+## 🚀 Deploying
 
-The site deploys as **one service**: Render runs the Express server, which also serves the built React app and the WebSocket connections.
+Two supported options:
 
-### One-time setup
+1. **Frontend on Vercel + backend on Render** (matches your proposal's Vercel mention) → follow the full beginner guide in **[DEPLOY-VERCEL.md](./DEPLOY-VERCEL.md)** — includes day-to-day management (updates, rollbacks, secrets, logs, domains, costs).
+2. **All-in-one on Render** (single URL, simplest) → use the `render.yaml` blueprint: Render dashboard → New + → Blueprint → pick this repo → add `MONGODB_URI` + `GEMINI_API_KEY` → Apply.
 
-1. **MongoDB Atlas network access** — in your Atlas dashboard: *Network Access → Add IP Address → Allow access from anywhere* (`0.0.0.0/0`). Without this, Render can't reach your database.
-2. **Get your Atlas URI** — Atlas → *Connect → Drivers*. Use the standard `mongodb+srv://...` string and add the database name before the `?`: `...mongodb.net/codenest?retryWrites=true&w=majority`
+### One-time database setup (both options)
 
-### Deploy steps
+- **MongoDB Atlas network access** — Atlas dashboard: *Network Access → Add IP Address → Allow access from anywhere* (`0.0.0.0/0`).
+- **Get your Atlas URI** — Atlas → *Connect → Drivers*. Use the standard `mongodb+srv://...` string and add the database name before the `?`: `...mongodb.net/codenest?retryWrites=true&w=majority`
 
-1. **Put the project on GitHub**
-   - Create a (free) account at [github.com](https://github.com), then create a new **empty repository** (e.g. `codenest`).
-   - In the project folder run:
-     ```bash
-     git init
-     git add .
-     git commit -m "CodeNest FYP"
-     git branch -M main
-     git remote add origin https://github.com/YOUR_USERNAME/codenest.git
-     git push -u origin main
-     ```
-   - Your `server/.env` is git-ignored — **your secrets never upload**. ✅
+### Option 2 in detail — all-in-one Render
+
+1. **Put the project on GitHub** (already initialized locally — create an empty repo on GitHub, then):
+   ```bash
+   git remote add origin https://github.com/YOUR_USERNAME/codenest.git
+   git branch -M main
+   git push -u origin main
+   ```
+   Your `server/.env` is git-ignored — **your secrets never upload**. ✅
 
 2. **Create the service on Render**
    - Sign up at [render.com](https://render.com) with GitHub → **New + → Blueprint** → select your `codenest` repo → **Apply**.
