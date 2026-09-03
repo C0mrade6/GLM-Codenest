@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { api } from '../api.js';
 
 const QUICK = ['Explain my code', 'Find bugs in my solution', 'How can I optimize this?'];
 
@@ -19,13 +20,7 @@ export default function ChatbotPanel({ roomCode, activeFile, hintsOn, onToggleHi
     setMessages((m) => [...m, { role: 'user', text: q }]);
     setBusy(true);
     try {
-      const res = await fetch('/api/ai/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ roomCode, message: q }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'AI unavailable');
+      const data = await api('/api/ai/chat', { method: 'POST', body: { roomCode, message: q } });
       setMessages((m) => [...m, { role: 'ai', text: data.reply }]);
     } catch (e) {
       setMessages((m) => [...m, { role: 'ai', text: `⚠️ ${e.message}` }]);

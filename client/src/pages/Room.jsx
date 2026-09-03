@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { io } from 'socket.io-client';
+import { api } from '../api.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import FileTabs from '../components/FileTabs.jsx';
 import CodeEditor from '../components/CodeEditor.jsx';
@@ -68,7 +69,7 @@ export default function Room() {
   // ---- socket lifecycle ----
   useEffect(() => {
     if (!name) return;
-    const socket = io('/', { transports: ['websocket', 'polling'] });
+    const socket = io(import.meta.env.VITE_SOCKET_URL || '/', { transports: ['websocket', 'polling'] });
     socketRef.current = socket;
 
     socket.emit('room:join', { code, name, userId: user?.id || null }, (res) => {
@@ -180,12 +181,7 @@ export default function Room() {
     if (!f || !f.content.trim()) return;
     lastHintAt.current = now;
     try {
-      const res = await fetch('/api/ai/hints', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ roomCode: code, fileId: fid }),
-      });
-      if (!res.ok) return;
-      const data = await res.json();
+      const data = await api('/api/ai/hints', { method: 'POST', body: { roomCode: code, fileId: fid } });
       if (fid === activeIdRef.current) setHints(data.hints || []);
     } catch { /* silent */ }
   };
